@@ -1,0 +1,91 @@
+cat << EOF > ./environment/gitlab-runner-policy.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "EKSGetAllClusters",
+            "Effect": "Allow",
+            "Action": [
+                "eks:DescribeNodegroup",
+                "eks:ListNodegroups",
+                "eks:DescribeCluster",
+                "eks:ListClusters",
+                "eks:AccessKubernetesApi",
+                "ssm:GetParameter",
+                "eks:ListUpdates",
+                "eks:ListFargateProfiles"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ASGSelfAccess",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ListAccountAliases",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeLifecycle*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ASGLifeCycleAccess",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:CompleteLifecycleAction",
+                "autoscaling:RecordLifecycleActionHeartbeat"
+            ],
+            "Resource": "arn:aws:autoscaling:*:*:autoScalingGroup:*:autoScalingGroupName/linux-docker-scaling-spotonly*"
+        },
+        {
+            "Sid": "AllowRunnerJobsToDoPredictiveScaling",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:UpdateAutoScalingGroup"
+            ],
+            "Resource": "arn:aws:autoscaling:*:*:autoScalingGroup:*:autoScalingGroupName/linux-docker-scaling-spotonly*"
+        },
+        {
+            "Sid": "EC2SelfAccess",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "S3CacheBucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketVersioning",
+                "s3:PutObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": "arn:aws:s3:::*linux-docker-scaling-spotonly*"
+        },
+        {
+            "Sid": "ECRAccess",
+            "Effect": "Allow",
+            "Action": "ecr:GetAuthorizationToken",
+            "Resource": "*"
+        },
+        {
+            "Sid": "ECRAccessRepo",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:CompleteLayerUpload",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:InitiateLayerUpload",
+                "ecr:PutImage",
+                "ecr:UploadLayerPart"
+            ],
+            "Resource": "arn:aws:ecr:*:*:*gitlab-spot-demo*"
+        }
+    ]
+}
+EOF
