@@ -68,7 +68,8 @@ if ! id -u "gitlab-runner" >/dev/null 2>&1; then
 fi
 $RunnerInstallRoot/gitlab-runner install --user="gitlab-runner" --working-directory="/gitlab-runner"
 echo -e "\nRunning scripts as '$(whoami)'\n\n"
-sudo mkdir -m777 -p /ci/bin /ci/tmp
+sudo mkdir -m 777 -p /ci/bin /ci/tmp/virtualenvs
+chmod -R 777 /ci
 for RunnerRegToken in ${GITLABRunnerRegTokenList//;/ }
 do
   $RunnerInstallRoot/gitlab-runner register \
