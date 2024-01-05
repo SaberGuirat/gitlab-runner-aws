@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-GITLABRunnerExecutor='docker'
 
+(crontab -l 2>/dev/null; echo "0 0 * * 6 docker system prune --all -f") | crontab -
+GITLABRunnerExecutor='docker'
 IMDS_TOKEN="$(curl -X PUT http://169.254.169.254/latest/api/token -H X-aws-ec2-metadata-token-ttl-seconds:21600)"
 MYIP="$(curl -H X-aws-ec2-metadata-token:$IMDS_TOKEN http://169.254.169.254/latest/meta-data/local-ipv4)"
 MYACCOUNTID="$(curl -H X-aws-ec2-metadata-token:$IMDS_TOKEN http://169.254.169.254/latest/dynamic/instance-identity/document | grep accountId | awk '{print $3}' | sed  's/"//g' | sed 's/,//g')"
