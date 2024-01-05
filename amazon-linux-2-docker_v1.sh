@@ -70,6 +70,9 @@ $RunnerInstallRoot/gitlab-runner install --user="gitlab-runner" --working-direct
 echo -e "\nRunning scripts as '$(whoami)'\n\n"
 sudo mkdir -m 777 -p /ci/bin /ci/tmp/virtualenvs
 chmod -R 777 /ci
+sudo mkdir -p /builds
+sudo chown -R gitlab-runner:gitlab-runner /builds
+sudo chmod -R 777 /builds
 for RunnerRegToken in ${GITLABRunnerRegTokenList//;/ }
 do
   $RunnerInstallRoot/gitlab-runner register \
@@ -90,7 +93,9 @@ do
     --cache-s3-bucket-location $AWS_REGION \
     --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
     --docker-volumes "/ci:/ci" \
+    --docker-volumes "/builds:/builds" \
     --docker-image "docker:latest" \
+    --docker-pull-policy "if-not-present" \
     --docker-privileged \
     --docker-tlsverify="false" \
     --docker-disable-cache="false" \
