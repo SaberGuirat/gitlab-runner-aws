@@ -81,7 +81,7 @@ do
     --name $RunnerName \
     --config $RunnerConfigToml \
     --url "$GITLABRunnerInstanceURL" \
-    --registration-token "$RunnerRegToken" \
+    --token "$RunnerRegToken" \
     --executor "$GITLABRunnerExecutor" \
     --run-untagged="true" \
     --tag-list "$RunnerCompleteTagList" \
