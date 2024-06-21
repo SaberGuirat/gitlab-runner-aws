@@ -101,7 +101,6 @@ for RunnerRegToken in ${GITLABRunnerRegTokenList//;/ }; do
         --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
         --docker-volumes "/ci:/ci" \
         --docker-volumes "/builds:/builds" \
-        --docker-image "docker:latest" \
         --docker-pull-policy "if-not-present" \
         --docker-privileged \
         --docker-tlsverify="false" \
